@@ -1,12 +1,221 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
     <title>Documentation</title>
-</head>
-<body>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  </head>
+
+  <body>
     <h1>Movie API</h1>
-    <p> The objective of this project is to build a server-side component of a "movies" web application. The web application will provide users with access to information about different movies, directors, and genres. Users will be able to sign up, update their personal information, and create a list of their favourite movies.</p>
-</body>
+    <p>
+      The objective of this project is to build a server-side component of a
+      "movies" web application. The web application will provide users with
+      access to information about different movies, directors, and genres. Users
+      will be able to sign up, update their personal information, and create a
+      list of their favourite movies.
+    </p>
+
+    <h3>Endpoints</h3>
+    <p>
+      The table below documents the endpoints in this API - including details of
+      what URL endpoints to target, the data to send as parameters and the data
+      to expect as responses.
+    </p>
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th scope="col">Business Logic</th>
+            <th scope="col">URL</th>
+            <th scope="col">HTTP Method</th>
+            <th scope="col">Request Body Data Format</th>
+            <th scope="col">Response Body Data Format</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Return a list of ALL movies to the user</td>
+            <td>/movies</td>
+            <td>
+              <code>GET</code>
+            </td>
+            <td>None</td>
+            <td>
+              A JSON array holding data about all movies in database
+            </td>
+          </tr>
+          <tr>
+            <td>Return data on single movie by title</td>
+            <td>/movies/:title</td>
+            <td>
+              <code>GET</code>
+            </td>
+            <td>None</td>
+            <td>
+              A JSON object holding data about a single movie, containing movie
+              title, description, genre details, director details and image URL.
+              Example: <br />
+              <code>
+                { <br />
+                "title":"The Shawshank Redemption", <br />
+                "description":"Over the course of several years, two convicts
+                form a friendship, seeking consolation and, eventually,
+                redemption through basic compassion.",<br />
+                "genre":<br>
+                    { <br />
+                "name":"Drama", <br />
+                "description":"In film and television, drama is a category of
+                narrative fiction (or semi-fiction) intended to be more serious
+                than humorous in tone." <br>
+                    }, <br />
+                "director":"Frank Derabont", <br />
+                "imageURL":"https://media.themoviedb.org/t/p/w300_and_h450_bestv2/9cqNxx0GxF0bflZmeSMuL5tnGzr.jpg"
+                <br />
+                }</code
+              >
+            </td>
+          </tr>
+          <tr>
+            <td>Return data on genre by name</td>
+            <td>/movies/genre/:genreName</td>
+            <td>
+              <code>GET</code>
+            </td>
+            <td>None</td>
+            <td>
+              A JSON object holding data about a movie genre, including name and
+              description: <br />
+              <code>
+                { <br />
+                "name": "Drama", <br />
+                "description": "In film and television, drama is a category of
+                narrative fiction (or semi-fiction) intended to be more serious
+                than humorous in tone." <br />
+                }</code
+              >
+            </td>
+          </tr>
+          <tr>
+            <td>Return data on director by name</td>
+            <td>/movies/director/:directorName</td>
+            <td>
+              <code>GET</code>
+            </td>
+            <td>None</td>
+            <td>
+              A JSON object holding data about a director, containing name, bio
+              and birth year: <br />
+              <code
+                >{<br />
+                "name": "Steven Spielberg", <br />
+                "Bio": "American film director, writer and producer. A major
+                figure of the New Hollywood era and pioneer of the modern
+                blockbuster, he is the most commercially successful director of
+                all time. Spielberg is the recipient of various accolades,
+                including three Academy Awards, a Kennedy Center honor, four
+                Directors Guild of America Awards, two BAFTA Awards, a Cecil B.
+                DeMille Award and an AFI Life Achievement Award.", <br />
+                "Birth": "1946" <br />
+                }</code
+              >
+            </td>
+          </tr>
+          <tr>
+            <td>Add a new user</td>
+            <td>/users</td>
+            <td>
+              <code>POST</code>
+            </td>
+            <td>
+              A JSON object holding data about the user to add, structured like:
+              <br />
+              <code
+                >{ <br />
+                "name": "Rory", <br />
+                "favouriteMovie": [] <br />
+                }</code
+              >
+            </td>
+            <td>
+              A JSON object holding data about the user that was added,
+              including an ID:<br />
+              <code>
+                { <br />
+                "name": "Rory", <br />
+                "favouriteMovie": [], <br />
+                "id": "3edcab41-5dc5-476d-b71a-de3a1052dcad" <br />
+                }</code
+              >
+            </td>
+          </tr>
+          <tr>
+            <td>Update user info</td>
+            <td>/users/:id</td>
+            <td>
+              <code>PUT</code>
+            </td>
+            <td>
+              A JSON object holding data about the user to update, structured
+              like: <br />
+              <code>
+                { <br />
+                "name": "Oscar updated name" <br />
+                "favouriteMovie":[] <br />
+                }</code
+              >
+            </td>
+            <td>
+              A JSON object holding data added to the user: <br />
+              <code>
+                { <br />
+                "id": 2, <br />
+                "name": "Oscar updated name", <br />
+                "favouriteMovie":[] <br />
+                }</code
+              >
+            </td>
+          </tr>
+          <tr>
+            <td>Add a movie to list of favourites</td>
+            <td>/users/:id/:movieTitle</td>
+            <td>
+              <code>POST</code>
+            </td>
+            <td>None</td>
+            <td>
+              A text message indicating whether the movie was successfully added
+              to user id
+            </td>
+          </tr>
+          <tr>
+            <td>Remove a movie from list of favourites</td>
+            <td>/users/:id/:movieTitle</td>
+            <td>
+              <code>DELETE</code>
+            </td>
+            <td>None</td>
+            <td>
+              A text message indicating whether the movie was successfully
+              removed
+            </td>
+          </tr>
+          <tr>
+            <td>Deregister existing user</td>
+            <td>/users/:id</td>
+            <td>
+              <code>DELETE</code>
+            </td>
+            <td>None</td>
+            <td>
+              A text message indicating whether the user was successfully
+              deleted
+            </td>
+          </tr>
+        </tbody>
+      </table>
+  </body>
 </html>
