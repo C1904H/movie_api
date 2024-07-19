@@ -32,6 +32,14 @@ app.use(
   express.static('public', { index: 'documentation.html' })
 );
 
+// Import auth.js file (and express available in auth.js)
+let auth = require('./auth')(app);
+
+// require passport module and import passport.js file
+const passport = require('passport');
+require('./passport');
+
+
 // CREATE new user registration
 app.post('/users', async (req, res) => {
   await Users.findOne({ Username: req.body.Username })
@@ -61,7 +69,12 @@ app.post('/users', async (req, res) => {
 });
 
 // UPDATE user info, by username
-app.put('/users/:Username', async (req, res) => {
+app.put('/users/:Username', passport.authenticate('jwt', { session: false }), async (req, res) => {
+  // Condition to check added here
+  if(req.user.Username !== req.params.Username){
+    return res.status(400).send('Permission denied');
+  }
+  // Condition ends
   await Users.findOneAndUpdate(
     { Username: req.params.Username },
     {
@@ -84,7 +97,7 @@ app.put('/users/:Username', async (req, res) => {
 });
 
 // Add a movie to a user's list of favorites
-app.post('/users/:Username/movies/:MovieID', async (req, res) => {
+app.post('/users/:Username/movies/:MovieID', passport.authenticate('jwt', {session: false }), async (req, res) => {
   await Users.findOneAndUpdate(
     { Username: req.params.Username },
     {
@@ -102,7 +115,7 @@ app.post('/users/:Username/movies/:MovieID', async (req, res) => {
 });
 
 // DELETE movie from user favourites
-app.delete('/users/:Username/Movies/:MovieID', async (req, res) => {
+app.delete('/users/:Username/Movies/:MovieID', passport.authenticate('jwt', {session: false }), async (req, res) => {
   await Users.findOneAndUpdate(
     { Username: req.params.Username },
     {
@@ -120,7 +133,7 @@ app.delete('/users/:Username/Movies/:MovieID', async (req, res) => {
 });
 
 // DELETE user by username
-app.delete('/users/:Username', async (req, res) => {
+app.delete('/users/:Username', passport.authenticate('jwt', {session: false }), async (req, res) => {
   await Users.findOneAndDelete({ Username: req.params.Username })
     .then((user) => {
       if (!user) {
@@ -141,7 +154,7 @@ app.get('/', (req, res) => {
 });
 
 // READ ALL users
-app.get('/users', async (req, res) => {
+app.get('/users', passport.authenticate('jwt', {session: false }), async (req, res) => {
   await Users.find()
     .then((users) => {
       res.status(201).json(users);
@@ -153,7 +166,7 @@ app.get('/users', async (req, res) => {
 });
 
 // READ a user by username
-app.get('/users/:Username', async (req, res) => {
+app.get('/users/:Username', passport.authenticate('jwt', {session: false }), async (req, res) => {
   await Users.findOne({ Username: req.params.Username })
     .then((user) => {
       res.json(user);
@@ -165,7 +178,7 @@ app.get('/users/:Username', async (req, res) => {
 });
 
 // READ ALL movies
-app.get('/movies', async (req, res) => {
+app.get('/movies', passport.authenticate('jwt', {session: false }), async (req, res) => {
   await Movies.find()
     .then((movies) => {
       res.status(201).json(movies);
@@ -177,7 +190,7 @@ app.get('/movies', async (req, res) => {
 });
 
 // READ movie data by TITLE
-app.get('/movies/:title', async (req, res) => {
+app.get('/movies/:title', passport.authenticate('jwt', {session: false }), async (req, res) => {
   await Movies.findOne({ Title: req.params.title })
     .then((movie) => {
       res.json(movie);
@@ -189,7 +202,7 @@ app.get('/movies/:title', async (req, res) => {
 });
 
 // READ movie by GENRE
-app.get('/movies/Genre/:GenreName', async (req, res) => {
+app.get('/movies/Genre/:GenreName', passport.authenticate('jwt', {session: false }), async (req, res) => {
   try {
     const genreName = req.params.GenreName;
     const movie = await Movies.findOne({ 'Genre.Name': genreName });
@@ -206,7 +219,7 @@ app.get('/movies/Genre/:GenreName', async (req, res) => {
 });
 
 // READ movie director by name
-app.get('/movies/Director/:DirectorName', async (req, res) => {
+app.get('/movies/Director/:DirectorName', passport.authenticate('jwt', {session: false }), async (req, res) => {
   try {
     const directorName = req.params.DirectorName;
     const movie = await Movies.findOne({ 'Director.Name': directorName });
