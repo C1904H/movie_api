@@ -14,7 +14,11 @@ const Models = require('./models.js');
 const Movies = Models.Movie;
 const Users = Models.User;
 
-mongoose.connect('mongodb://localhost:27017/moviesDB', {
+// mongoose.connect('mongodb://localhost:27017/moviesDB', {
+//   useNewUrlParser: true, useUnifiedTopology: true
+// });
+
+mongoose.connect(process.env.CONNECTION_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true
 });
@@ -309,6 +313,6 @@ app.use((err, req, res, next) => {
 
 // Listen for requests
 const port = process.env.PORT || 8080;
-app.listen(port, '0.0.0.0',() => {
- console.log('Listening on Port ' + port);
+app.listen(port, '0.0.0.0', () => {
+  console.log('Listening on Port ' + port);
 });
