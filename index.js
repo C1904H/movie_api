@@ -23,9 +23,12 @@ mongoose.connect(process.env.CONNECTION_URI, {
   useUnifiedTopology: true
 });
 
-// Initialize body-parser
-app.use(bodyParser.json());
-app.use(express.urlencoded({ extended: true }));
+// Invoke CORS - cross-origin resource sharing
+const cors = require('cors');
+app.use(cors());
+
+// Import auth.js file (and express available in auth.js)
+let auth = require('./auth')(app);
 
 // express.static to serve documentation.html file from public folder
 app.use(
@@ -37,12 +40,9 @@ app.use(
 const passport = require('passport');
 require('./passport');
 
-// Invoke CORS - cross-origin resource sharing
-const cors = require('cors');
-app.use(cors());
-
-// Import auth.js file (and express available in auth.js)
-let auth = require('./auth')(app);
+// Initialize body-parser
+app.use(bodyParser.json());
+app.use(express.urlencoded({ extended: true }));
 
 // Require express-validator
 const { check, validationResult } = require('express-validator');
