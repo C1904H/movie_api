@@ -18,7 +18,7 @@ const Users = Models.User;
 //   useNewUrlParser: true, useUnifiedTopology: true
 // });
 
-mongoose.connect(process.env.CONNECTION_URI, {
+mongoose.connect( process.env.CONNECTION_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true
 });
@@ -54,7 +54,7 @@ app.use(morgan('common'));
 app.post(
   '/users',
   [
-    check('Username', 'Username is required').isLength({ min: 5 }),
+    check('Username', 'Username is required').isLength({min: 5}),
     check(
       'Username',
       'Username contains non alphanumeric characters - not allowed.'
@@ -64,7 +64,7 @@ app.post(
   ],
   async (req, res) => {
     // check validation object for errors
-    let errors = validationResults(req);
+    let errors = validationResult(req);
 
     if (!errors.isEmpty()) {
       return res.status(422).json({ errors: errors.array() });
@@ -83,7 +83,7 @@ app.post(
             Birthday: req.body.Birthday
           })
             .then((user) => {
-              res.status(201).json(user);
+              res.status(201).json(user)
             })
             .catch((error) => {
               console.error(error);
