@@ -18,7 +18,7 @@ const Users = Models.User;
 //   useNewUrlParser: true, useUnifiedTopology: true
 // });
 
-mongoose.connect( process.env.CONNECTION_URI, {
+mongoose.connect(process.env.CONNECTION_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true
 });
@@ -54,7 +54,7 @@ app.use(morgan('common'));
 app.post(
   '/users',
   [
-    check('Username', 'Username is required').isLength({min: 5}),
+    check('Username', 'Username is required').isLength({ min: 5 }),
     check(
       'Username',
       'Username contains non alphanumeric characters - not allowed.'
@@ -83,7 +83,7 @@ app.post(
             Birthday: req.body.Birthday
           })
             .then((user) => {
-              res.status(201).json(user)
+              res.status(201).json(user);
             })
             .catch((error) => {
               console.error(error);
@@ -232,20 +232,16 @@ app.get(
 );
 
 // READ ALL movies
-app.get(
-  '/movies',
-  passport.authenticate('jwt', { session: false }),
-  async (req, res) => {
-    await Movies.find()
-      .then((movies) => {
-        res.status(201).json(movies);
-      })
-      .catch((err) => {
-        console.error(err);
-        res.status(500).send('Error: ' + err);
-      });
-  }
-);
+app.get('/movies', async (req, res) => {
+  await Movies.find()
+    .then((movies) => {
+      res.status(201).json(movies);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send('Error: ' + err);
+    });
+});
 
 // READ movie data by TITLE
 app.get(
