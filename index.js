@@ -27,9 +27,6 @@ mongoose.connect(process.env.CONNECTION_URI, {
 const cors = require('cors');
 app.use(cors());
 
-// Import auth.js file (and express available in auth.js)
-let auth = require('./auth')(app);
-
 // express.static to serve documentation.html file from public folder
 app.use(
   '/documentation',
@@ -43,6 +40,9 @@ require('./passport');
 // Initialize body-parser
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Import auth.js file (and express available in auth.js)
+let auth = require('./auth')(app);
 
 // Require express-validator
 const { check, validationResult } = require('express-validator');
