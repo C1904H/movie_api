@@ -33,16 +33,16 @@ app.use(
   express.static('public', { index: 'documentation.html' })
 );
 
-// require passport module and import passport.js file
-const passport = require('passport');
-require('./passport');
-
 // Initialize body-parser
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Import auth.js file (and express available in auth.js)
 let auth = require('./auth')(app);
+
+// require passport module and import passport.js file
+const passport = require('passport');
+require('./passport');
 
 // Require express-validator
 const { check, validationResult } = require('express-validator');
