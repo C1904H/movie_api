@@ -101,23 +101,33 @@ app.post(
 // UPDATE user info, by username
 app.put(
   '/users/:Username',
+  [
+    check('Username', 'Username is required').isLength({ min: 5}),
+    check( 'Username',
+    'Username contains non alphanumeric characters - not allowed.'
+  ).isAlphanumeric(),
+    check('Email', 'Email does not appear to be valid').isEmail(),
+  ],
   passport.authenticate('jwt', { session: false }),
   async (req, res) => {
     // Condition to check added here
     if (req.user.Username !== req.params.Username) {
       return res.status(400).send('Permission denied');
     }
+
+    const updatedUser = {
+      Username: req.body.Username,
+      Email: req.body.Email,
+      Birthday: req.body.Birthday,
+    };
+
+    if (req.body.Password) {
+      updatedUser.Password = Users.hashPassword(req.body.Password);
+    }
     // Condition ends
     await Users.findOneAndUpdate(
       { Username: req.params.Username },
-      {
-        $set: {
-          Username: req.body.Username,
-          Password: req.body.Password,
-          Email: req.body.Email,
-          Birthday: req.body.Birthday
-        }
-      },
+      { $set: updatedUser },
       { new: true }
     ) //ensures updated document returned
       .then((updatedUser) => {
